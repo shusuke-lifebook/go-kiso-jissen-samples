@@ -16,4 +16,9 @@ func main() {
 	fmt.Printf("表示回数：%d\n", views)
 	fmt.Printf("題の長さの上限：%d\n", maxTitleLen)
 
+	if pinned {
+		fmt.Println("ピン留め：はい")
+	} else {
+		fmt.Println("ピン留め：いいえ")
+	}
 }
