@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"unicode/utf8"
+)
 
 const maxTitleLen = 20
 
@@ -25,5 +28,15 @@ func main() {
 		fmt.Println("ピン留め：はい")
 	} else {
 		fmt.Println("ピン留め：いいえ")
+	}
+
+	n := utf8.RuneCountInString(title)
+	switch {
+	case n == 0:
+		fmt.Println("題が空です")
+	case n > maxTitleLen:
+		fmt.Printf("題が長すぎます (%d文字まで)\n", maxTitleLen)
+	default:
+		fmt.Printf("題の文字数：%d (バイト数：%d)\n", n, len(title))
 	}
 }
