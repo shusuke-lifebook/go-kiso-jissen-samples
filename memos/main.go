@@ -10,6 +10,11 @@ func main() {
 	pinned := true
 	var views int
 
+	for i := 0; i < 24; i++ {
+		fmt.Print("-")
+	}
+	fmt.Println("")
+
 	fmt.Printf("題：%s\n", title)
 	fmt.Printf("本文：%s\n", body)
 	fmt.Printf("ピン留め：%t\n", pinned)
