@@ -15,6 +15,11 @@ func main() {
 	printMemo(title, body, pinned)
 }
 
+// titleLengthは、題の文字数とバイト数を返す。
+func titleLength(title string) (int, int) {
+	return utf8.RuneCountInString(title), len(title)
+}
+
 // printMemo は、メモ1件を区切りの線の下に表示する。
 func printMemo(title, body string, pinned bool) {
 	for i := 0; i < 24; i++ {
@@ -29,13 +34,7 @@ func printMemo(title, body string, pinned bool) {
 		fmt.Println("ピン留め：いいえ")
 	}
 
-	n := utf8.RuneCountInString(title)
-	switch {
-	case n == 0:
-		fmt.Println("題が空です")
-	case n > maxTitleLen:
-		fmt.Printf("題が長すぎます (%d文字まで)\n", maxTitleLen)
-	default:
-		fmt.Printf("題の文字数：%d (バイト数：%d)\n", n, len(title))
-	}
+	// n := utf8.RuneCountInString(title)
+	n, b := titleLength(title)
+	fmt.Printf("題の文字数：%d (バイト数：%d)\n", n, b)
 }
