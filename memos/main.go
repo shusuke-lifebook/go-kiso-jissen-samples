@@ -1,18 +1,44 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"unicode/utf8"
 )
 
 const maxTitleLen = 20
+
+var (
+	ErrEmptyTitle   = errors.New("題が空です")
+	ErrTitleTooLong = errors.New("題が長すぎます")
+)
 
 func main() {
 	title := "買い物リスト"
 	body := "牛乳と卵を買う"
 	pinned := true
 
+	if err := validateTitle(title); err != nil {
+		if errors.Is(err, ErrTitleTooLong) {
+			fmt.Println("題を短くしてください")
+		}
+		fmt.Println("エラー：", err)
+		os.Exit(1)
+	}
 	printMemo(title, body, pinned)
+}
+
+// validateTitleは、題が空でなく、maxTitleLenの文字以内かを確かめる。
+func validateTitle(title string) error {
+	n, _ := titleLength(title)
+	if n == 0 {
+		return ErrEmptyTitle
+	}
+	if n > maxTitleLen {
+		return fmt.Errorf("%w (%d 文字。 %d 文字まで)", ErrTitleTooLong, n, maxTitleLen)
+	}
+	return nil
 }
 
 // titleLengthは、題の文字数とバイト数を返す。
