@@ -16,6 +16,14 @@ var (
 
 func main() {
 	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
+	bodies := map[string]string{
+		"買い物リスト": "牛乳と卵を買う",
+		"会議のメモ":  "来週の会議で予算を決める",
+		"読みたい本":  "Go の本を2冊",
+	}
+	pinned = map[string]bool{
+		"会議のメモ": true,
+	}
 	title := "買い物リスト"
 	body := "牛乳と卵を買う"
 	pinned := true
