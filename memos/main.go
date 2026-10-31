@@ -15,9 +15,12 @@ var (
 )
 
 func main() {
+	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
 	title := "買い物リスト"
 	body := "牛乳と卵を買う"
 	pinned := true
+
+	titles = append(titles, "週末の予定")
 
 	if err := validateTitle(title); err != nil {
 		if errors.Is(err, ErrTitleTooLong) {
