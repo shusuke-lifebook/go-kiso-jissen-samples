@@ -71,34 +71,37 @@ func (m *Memo) Print() {
 }
 
 func main() {
-	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
+	titles := []string{"買い物リスト", "会議のメモ", "読みたい本", "週末の予定"}
 	bodies := map[string]string{
 		"買い物リスト": "牛乳と卵を買う",
 		"会議のメモ":  "来週の会議で予算を決める",
 		"読みたい本":  "Go の本を2冊",
-	}
-	pinned := map[string]bool{
-		"会議のメモ": true,
+		"週末の予定":  "本屋に行く",
 	}
 
-	titles = append(titles, "週末の予定")
-	bodies["週末の予定"] = "本屋に行く"
-
+	var memos []*Memo
 	for _, title := range titles {
-		if err := validateTitle(title); err != nil {
+		m, err := NewMemo(title, bodies[title])
+		if err != nil {
 			fmt.Println("エラー：", err)
 			os.Exit(1)
 		}
+		memos = append(memos, m)
+	}
+	memos[1].Pinned = true
+	if err := memos[0].Edit("買い物リスト（土曜）", "牛乳と卵とパンを買う"); err != nil {
+		fmt.Println("エラー：", err)
+		os.Exit(1)
 	}
 
-	slices.SortFunc(titles, func(a, b string) int {
-		if pinned[a] != pinned[b] {
-			if pinned[a] {
+	slices.SortFunc(memos, func(a, b *Memo) int {
+		if a.Pinned != b.Pinned {
+			if a.Pinned {
 				return -1
 			}
 			return 1
 		}
-		return strings.Compare(a, b)
+		return strings.Compare(a.Title, b.Title)
 	})
 
 	word := ""
@@ -106,15 +109,14 @@ func main() {
 		word = os.Args[1]
 	}
 	found := 0
-	for _, title := range titles {
-		body := bodies[title]
-		if word != "" && !strings.Contains(title, word) && !strings.Contains(body, word) {
+	for _, m := range memos {
+		if word != "" && !m.Contains(word) {
 			continue
 		}
-		printMemo(title, body, pinned[title])
+		m.Print()
 		found++
 	}
-	fmt.Printf("%d 件のメモ (全部で %d 件)\n", found, len(titles))
+	fmt.Printf("%d 件のメモ（全部で %d 件）\n", found, len(memos))
 }
 
 // validateTitleは、題が空でなく、maxTitleLenの文字以内かを確かめる。
