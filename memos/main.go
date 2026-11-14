@@ -41,6 +41,17 @@ func NewMemo(title, body string) (*Memo, error) {
 	}, nil
 }
 
+// Edit は、メモの題と本文を書き換え、更新した日時を記録する。
+func (m *Memo) Edit(title, body string) error {
+	if err := validateTitle(title); err != nil {
+		return err
+	}
+	m.Title = title
+	m.Body = body
+	m.UpdatedAt = time.Now()
+	return nil
+}
+
 // Contains は、題か本文に word が含まれるかを返す。
 func (m *Memo) Contains(word string) bool {
 	return strings.Contains(m.Title, word) || strings.Contains(m.Body, word)
