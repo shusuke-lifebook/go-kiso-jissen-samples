@@ -41,6 +41,24 @@ func NewMemo(title, body string) (*Memo, error) {
 	}, nil
 }
 
+// Contains は、題か本文に word が含まれるかを返す。
+func (m *Memo) Contains(word string) bool {
+	return strings.Contains(m.Title, word) || strings.Contains(m.Body, word)
+}
+
+// Print は、メモ1件を区切りの線の下に表示する。
+func (m *Memo) Print() {
+	fmt.Println(strings.Repeat("-", 24))
+	fmt.Printf("題：%s\n", m.Title)
+	fmt.Printf("本文：%s\n", m.Body)
+	if m.Pinned {
+		fmt.Println("ピン留め： はい")
+	} else {
+		fmt.Println("ピン留め： いいえ")
+	}
+	fmt.Printf("更新: %s\n", m.UpdatedAt.Format("2006-01-02 15:04"))
+}
+
 func main() {
 	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
 	bodies := map[string]string{
