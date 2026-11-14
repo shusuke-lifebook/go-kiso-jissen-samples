@@ -6,6 +6,7 @@ import (
 	"os"
 	"slices"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -15,6 +16,15 @@ var (
 	ErrEmptyTitle   = errors.New("題が空です")
 	ErrTitleTooLong = errors.New("題が長すぎます")
 )
+
+// Memo は、メモ1件を表す。
+type Memo struct {
+	Title     string
+	Body      string
+	Pinned    bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
 
 func main() {
 	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
