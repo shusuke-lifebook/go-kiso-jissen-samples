@@ -26,6 +26,21 @@ type Memo struct {
 	UpdatedAt time.Time
 }
 
+// NewMemo は、題を確かめてから新しいメモを作る。
+func NewMemo(title, body string) (*Memo, error) {
+	if err := validateTitle(title); err != nil {
+		return nil, err
+	}
+	now := time.Now()
+	return &Memo{
+		Title:     title,
+		Body:      body,
+		Pinned:    false,
+		CreatedAt: now,
+		UpdatedAt: now,
+	}, nil
+}
+
 func main() {
 	titles := []string{"買い物リスト", "会議のメモ", "読みたい本"}
 	bodies := map[string]string{
