@@ -1,4 +1,8 @@
-// memos は、 メモの一覧を表示するコマンド。引数に言葉を渡すと、その言葉を含むメモだけを表示する。
+// memos は、 メモをJSONファイルmemos.jsonに保存するコマンド。
+//
+// memos add <題> <本文> メモを足す
+// memos list [言葉] 一覧を表示する。言葉を渡すと、その言葉を含むメモだけ
+// memos delete <IDの先頭> メモを消す
 package main
 
 import (
