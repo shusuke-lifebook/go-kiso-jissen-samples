@@ -9,6 +9,7 @@ bin/
 
 # --- Go coverage & profiling ---
 coverage.out
+cover.out
 *.cover
 *.cov
 *.prof
