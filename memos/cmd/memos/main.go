@@ -3,16 +3,19 @@
 // memos add <題> <本文> メモを足す
 // memos list [言葉] 一覧を表示する。言葉を渡すと、その言葉を含むメモだけ
 // memos delete <IDの先頭> メモを消す
+// memos import <ディレクトリ> ディレクトリの.txtのファイルを、メモとしてまとめて取り込む
 package main
 
 import (
 	"errors"
 	"fmt"
 	"io"
+	"memos/internal/importer"
 	"memos/internal/memo"
 	"memos/internal/store"
 	"os"
 	"strings"
+	"time"
 )
 
 const dataFile = "memos.json"
@@ -47,8 +50,13 @@ func run(w io.Writer, s store.Store, args []string) error {
 			return errors.New("使い方：memos delete <IDの先頭>")
 		}
 		return remove(w, s, args[1])
+	case "import":
+		if len(args) != 2 {
+			return errors.New("使い方：memos import <ディレクトリ>")
+		}
+		return importDir(w, s, args[1])
 	default:
-		return fmt.Errorf("知らないコマンドです。:%s (add・list・deleteのどれか)", args[0])
+		return fmt.Errorf("知らないコマンドです。:%s (add・list・delete・importのどれか)", args[0])
 	}
 }
 
@@ -107,4 +115,20 @@ func remove(w io.Writer, s store.Store, prefix string) error {
 	default:
 		return fmt.Errorf("%s で始まるメモが%d件あります。IDをもっと長く書いてください", prefix, len(hit))
 	}
+}
+
+// importDir は、dirの.txtのファイルを同時に読み込んでメモにし、保存する。
+func importDir(w io.Writer, s store.Store, dir string) error {
+	start := time.Now()
+	memos, err := importer.ReadDir(dir, 8)
+	if err != nil {
+		return err
+	}
+	for _, m := range memos {
+		if err := s.Save(m); err != nil {
+			return err
+		}
+	}
+	fmt.Fprintf(w, "%d件を取り込みました(%v) \n", len(memos), time.Since(start).Round(time.Millisecond))
+	return nil
 }
