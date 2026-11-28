@@ -94,6 +94,10 @@ func (srv *Server) updateMemo(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, errorBody{Error: "JSONを読めません：" + err.Error()})
 		return
 	}
+	if err := m.Edit(in.Title, in.Body); err != nil {
+		writeError(w, err)
+		return
+	}
 	m.Pinned = in.Pinned
 	if err := srv.store.Save(m); err != nil {
 		writeError(w, err)
