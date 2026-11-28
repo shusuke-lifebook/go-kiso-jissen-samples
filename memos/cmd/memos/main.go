@@ -4,15 +4,19 @@
 // memos list [言葉] 一覧を表示する。言葉を渡すと、その言葉を含むメモだけ
 // memos delete <IDの先頭> メモを消す
 // memos import <ディレクトリ> ディレクトリの.txtのファイルを、メモとしてまとめて取り込む
+// memos serve [アドレス] Web APIを動かす(アドレスの既定はlocalhost:8080)
 package main
 
 import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"memos/internal/importer"
 	"memos/internal/memo"
 	"memos/internal/store"
+	"memos/internal/web"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -55,6 +59,12 @@ func run(w io.Writer, s store.Store, args []string) error {
 			return errors.New("使い方：memos import <ディレクトリ>")
 		}
 		return importDir(w, s, args[1])
+	case "serve":
+		addr := "localhost:8080"
+		if len(args) > 1 {
+			addr = args[1]
+		}
+		return serve(s, addr)
 	default:
 		return fmt.Errorf("知らないコマンドです。:%s (add・list・delete・importのどれか)", args[0])
 	}
@@ -131,4 +141,11 @@ func importDir(w io.Writer, s store.Store, dir string) error {
 	}
 	fmt.Fprintf(w, "%d件を取り込みました(%v) \n", len(memos), time.Since(start).Round(time.Millisecond))
 	return nil
+}
+
+// serve は、 addrでWeb APIを動かす。止めるまで戻らない
+func serve(s store.Store, addr string) error {
+	srv := web.NewServer(s)
+	log.Printf("http://%s で待っています(止めるときはCtrl + C)", addr)
+	return http.ListenAndServe(addr, srv.Handler())
 }
