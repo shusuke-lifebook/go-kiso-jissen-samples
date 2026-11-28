@@ -18,3 +18,6 @@
       - curl -s -X PUT -d '@testdata/edit-memo.json' http://localhost:8080/api/memos/ccb57b20-7ad9-4969-87d3-10a431634150
     - curl -s -i -X DELETE http://localhost:8080/api/memos/<id>
       - curl -s -i -X DELETE http://localhost:8080/api/memos/ccb57b20-7ad9-4969-87d3-10a431634150
+
+## SQLiteのドライバ
+- go get modernc.org/sqlite
